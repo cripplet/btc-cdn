@@ -30,15 +30,24 @@ CMD
 ----
 
 Envision the most-used command will be to SEND data. We want to ensure that as little of the DATA field will be used up for aux data.
+1xxxx is reserved for SEND-related commands, 0xxxx is reserved for aux commands.
 
 * MSG = 10000 -- basic message
-* MSGTERM = 10001 -- this is the last message
-* TRANFERACCT -- this account is now expired
+* FILESTART = 10001 -- this is the first message of a file
+* FILETERM = 10002 -- this is the last message of a file
+* TRANFERACCT = (0xxxx) -- this account is now expired
 
 DATA
 ----
 
-* MSG: DATA = CNT:STRING, where CNT is a 4 byte counter. CNT is tracked on host-side. STRING is 75 bytes long.
-* MSGTERM: same as MSG, except STRING may be less than 75 bytes
-* TRANFERACCT: DATA = BTCACCT (36 bytes)
+* MSG: DATA = CNT:STRING, where CNT is a 4 byte counter starting at 0. CNT is tracked on host-side. STRING is 75 bytes long.
+* FILESTART: same as MSG. CNT DOES NOT RESET
+* FILETERM: same as MSG, except STRING may be less than 75 bytes. CNT DOES NOT RESET
+* TRANFERACCT: DATA = BTCACCT (36 bytes) OR NULL (account term)
 
+Examples
+----
+
+The first message sent MUST be (in bits)
+
+[VERSION]:10000:[0 * 32]:[DATA]
