@@ -50,4 +50,4 @@ Examples
 
 The first message sent MUST be (in bits)
 
-[VERSION]:10000:[0 * 32]:[DATA]
+[VERSION]:10001:[0 * 32]:[DATA]
