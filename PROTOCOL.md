@@ -67,7 +67,7 @@ DATA
 -----------------------------------------
 ```
 
-* `COUNTER` is a 0-indexed log which keeps track of the last-known file data message. `COUNTER` initializes, should not skip any integer, and must not repeat.
+* `COUNTER` is a 0-indexed log which keeps track of the last-known file data message. `COUNTER` initializes to 0, should not skip any integer, and must not repeat. `COUNTER` is tracked by the uploader.
 * In the case that `COUNTER == \Uffffffff`, we can call `TERMACCT` on a new BTC address and continue serving a file to the new address, thereby allowing arbitrarily large storage.
 
 Example
