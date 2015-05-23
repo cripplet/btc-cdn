@@ -1,6 +1,4 @@
-# BTC-CDN
-
-Saving data onto the blockchain.
+# BTC-CDN Protocol
 
 Goals
 ----
@@ -51,6 +49,7 @@ COMMAND
 | FILETERM  | \b10010  | end file                 |
 | TERMACCT  | \b00001  | this account has expired |
 ---------------------------------------------------
+```
 
 * Note that we can signify a short message by ORing `MESSAGE | FILESTART | FILETERM`, saving an transaction and associated confirmation fees.
 
