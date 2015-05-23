@@ -1,53 +1,83 @@
-# btc-cdn (btcdn?)
+# BTC-CDN
+
+Saving data onto the blockchain.
 
 Goals
 ----
 
-* we know 80 bytes per btc tx
-* we want (potentially) arbitrary storage
-* anonyminifjeklwam;fewa
+* utilize the 40 bytes alloted to each BTC transaction using the OP_RETURN script
+* allow storage of arbitrarily large data
 
-
-# VERSION 0.1
-80 bytes split into:
-
-PROTOCOL
+VERSION 0.1.1
 ----
 
-VERSION:CMD:DATA
+The 40 bytes of the OP_RETURN metadata is split accordingly:
 
-VERSION: 3 bits (8 versions...?)
-CMD: 5 bits (32 commands)
-DATA: CMD-dependent
+```
+---------------
+|  1   |  39  | // byte length
+|-------------|
+| HEAD | DATA |
+---------------
+```
+
+Where the one-byte `HEADER` is comprised of the `VERSION` and `COMMAND` fields:
+
+```
+-----------
+| 3 |  5  | // bit length
+|---------|
+| V | CMD |
+-----------
+```
 
 VERSION
 ----
 
-* reserve VERSION == 111 for future protocol revisions -- CMD/DATA split may be different in future
-* current VERSION == 000
+* reserve `VERSION == \b111` for future protocol revisions, where the data length fields will be different
+* current `VERSION == \b000`
 
-CMD
+COMMAND
 ----
 
-Envision the most-used command will be to SEND data. We want to ensure that as little of the DATA field will be used up for aux data.
-1xxxx is reserved for SEND-related commands, 0xxxx is reserved for aux commands.
+`\b1xxxx` is reserved for SEND-related commands, and `\b0xxxx` is reserved for auxiliary commands.
 
-* MSG = 10000 -- basic message
-* FILESTART = 10001 -- this is the first message of a file
-* FILETERM = 10002 -- this is the last message of a file
-* TRANFERACCT = (0xxxx) -- this account is now expired
+```
+---------------------------------------------------
+| COMMAND   | bytecode | description              |
+|-------------------------------------------------|
+| MESSAGE   | \b10000  | file data                |
+| FILESTART | \b10001  | new file                 |
+| FILETERM  | \b10010  | end file                 |
+| TERMACCT  | \b00001  | this account has expired |
+---------------------------------------------------
+
+* Note that we can signify a short message by ORing `MESSAGE | FILESTART | FILETERM`, saving an transaction and associated confirmation fees.
 
 DATA
 ----
 
-* MSG: DATA = CNT:STRING, where CNT is a 4 byte counter starting at 0. CNT is tracked on host-side. STRING is 75 bytes long.
-* FILESTART: same as MSG. CNT DOES NOT RESET
-* FILETERM: same as MSG, except STRING may be less than 75 bytes. CNT DOES NOT RESET
-* TRANFERACCT: DATA = BTCACCT (36 bytes) OR NULL (account term)
+```
+-----------------------------------------
+| COMMAND   | DATA FORMAT (bytes)       |
+|---------------------------------------|
+| MESSAGE   | COUNTER (4) | STRING (35) |
+| FILESTART | COUNTER (4) | STRING (35) |
+| FILETERM  | COUNTER (4) | STRING (35) |
+| TERMACCT  | ACCOUNT (36) or NULL      |
+-----------------------------------------
+```
 
-Examples
+* `COUNTER` is a 0-indexed log which keeps track of the last-known file data message. `COUNTER` initializes, should not skip any integer, and must not repeat.
+* In the case that `COUNTER == \Uffffffff`, we can call `TERMACCT` on a new BTC address and continue serving a file to the new address, thereby allowing arbitrarily large storage.
+
+Example
 ----
 
-The first message sent MUST be (in bits)
+* Sending "Hello World!" using `VERSION == \b000` in the first message of the account (i.e. `COMMAND == \b10011`, `COUNTER == \U00000000`):
+* 0x130000000048656c6c6f20576f726c6421
 
-[VERSION]:10001:[0 * 32]:[DATA]
+Notes
+----
+
+* [BTC-CDN-encode](https://github.com/cripplet/btc-cdn-encode) is the official implementation of BTC-CDN to upload onto the blockchain.
