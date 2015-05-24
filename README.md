@@ -4,7 +4,7 @@ storing data in the blockchain
 Version 0.1.1
 ----
 
-* [protocol](PROTOCOL.md)
+* [BTC-CDN protocol v0.1.1](PROTOCOL.md)
 
 
 Notes
