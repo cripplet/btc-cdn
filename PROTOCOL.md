@@ -78,8 +78,3 @@ Example
 ```
 0x130000000048656c6c6f20576f726c6421
 ```
-
-Notes
-----
-
-* [BTC-CDN-encode](https://github.com/cripplet/btc-cdn-encode) is the official implementation of BTC-CDN to upload onto the blockchain.
