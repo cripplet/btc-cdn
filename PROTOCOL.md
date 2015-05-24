@@ -74,7 +74,10 @@ Example
 ----
 
 * Sending "Hello World!" using `VERSION == \b000` in the first message of the account (i.e. `COMMAND == \b10011`, `COUNTER == \U00000000`):
-* 0x130000000048656c6c6f20576f726c6421
+
+```
+0x130000000048656c6c6f20576f726c6421
+```
 
 Notes
 ----
