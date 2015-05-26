@@ -3,13 +3,13 @@
 Goals
 ----
 
-* utilize the 40 bytes alloted to each BTC transaction using the OP_RETURN script
+* utilize the 40 bytes alloted to each BTC transaction using the `OP_RETURN` script
 * allow storage of arbitrarily large data
 
-VERSION 0.1.1
+VERSION 0.2
 ----
 
-The 40 bytes of the OP_RETURN metadata is split accordingly:
+The 40 bytes of the `OP_RETURN` metadata is split accordingly:
 
 ```
 ---------------
@@ -28,6 +28,8 @@ Where the one-byte `HEADER` is comprised of the `VERSION` and `COMMAND` fields:
 | V | CMD |
 -----------
 ```
+
+So that multiple accounts can share the same drop-off, the interpretation of the metadata (including commands) will be on an address-by-address basis. That is, we shall treat every `SOURCE:DESTINATION` address pairing as a unique account and interpret any data sent to `DESTINATION` from `SOURCE` as a continuation of previous `SOURCE:DESTINATION transactions.` For the sake of simplicity, this means that in any given transaction, there must only be *one* unique `SOURCE` address.
 
 VERSION
 ----
