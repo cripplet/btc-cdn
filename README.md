@@ -1,12 +1,13 @@
 # btc-cdn
 storing data in the blockchain
 
-Version 0.2
+Version 0.1.1
 ----
 
-* [BTC-CDN protocol v0.2](PROTOCOL.md)
+* [BTC-CDN protocol v0.1.1](PROTOCOL.md)
+
 
 Notes
 ----
 
-* There is no [BTC-CDN-encode](https://github.com/cripplet/btc-cdn-encode) implementation of the current version of the protocol yet.
+* [BTC-CDN-encode](https://github.com/cripplet/btc-cdn-encode/releases/tag/0.1.1) is the official implementation of BTC-CDN to upload onto the blockchain.
